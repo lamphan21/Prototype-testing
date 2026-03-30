@@ -2580,12 +2580,15 @@
   }
 
   function resetDateToToday() {
-    calSelected = null;
-    calPending  = null;
-    if (dateChipLabel) dateChipLabel.textContent = 'Theo ngày';
-    if (dateChip)      dateChip.classList.remove('selected');
+    const t = new Date();
+    calSelected = { year: t.getFullYear(), month: t.getMonth(), day: t.getDate() };
+    calPending  = { ...calSelected };
+    const dd = String(t.getDate()).padStart(2,'0');
+    const mm = String(t.getMonth() + 1).padStart(2,'0');
+    if (dateChipLabel) dateChipLabel.textContent = `${dd}/${mm}/${t.getFullYear()}`;
+    if (dateChip)      dateChip.classList.add('selected');
     if (typeof renderCalGrid === 'function') renderCalGrid();
-    updateSummary(null);
+    updateSummary(calSelected);
   }
 
   function injectNewCustomers() {
