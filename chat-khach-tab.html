@@ -2263,7 +2263,7 @@
 
   <!-- Footer CTA -->
   <div class="cust-footer">
-    <button class="cust-cta">Nhắn tin tư vấn</button>
+    <button class="cust-cta" onclick="openChatRoom()">Nhắn tin tư vấn</button>
   </div>
 
 </div><!-- /cust-sheet -->
@@ -2897,6 +2897,377 @@
   calSheet.addEventListener('touchend',   e => {
     if (e.changedTouches[0].clientY - calStartY > 80) closeCalSheet();
   }, { passive: true });
+  /* ── Chat Room ──────────────────────────────────────────── */
+  function openChatRoom() {
+    // Carry name + avatar from cust-sheet
+    const name = document.getElementById('cust-name-text')?.textContent?.trim();
+    const avatarSrc = document.getElementById('cust-avatar-img')?.src;
+    if (name) document.getElementById('cr-name').textContent = name;
+    if (avatarSrc) document.getElementById('cr-avatar').src = avatarSrc;
+
+    // Close cust-sheet first, then slide in chat room
+    closeCustSheet();
+    setTimeout(() => {
+      document.getElementById('chat-room').classList.add('open');
+    }, 260);
+  }
+
+  function closeChatRoom() {
+    document.getElementById('chat-room').classList.remove('open');
+  }
 </script>
+
+<!-- ══════════════════════════════════════════════════════════
+     Chat Room — full-screen slide-in overlay
+══════════════════════════════════════════════════════════ -->
+<div class="chat-room" id="chat-room">
+
+  <style>
+    /* ── Chat room overlay ───────────────────────────────── */
+    .chat-room {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      transform: translateX(100%);
+      transition: transform .32s cubic-bezier(.32,.72,0,1);
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-app);
+    }
+    .chat-room.open { transform: translateX(0); }
+
+    /* Status bar */
+    .cr-status {
+      background: var(--bg-primary);
+      height: 54px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+    .cr-status .cr-time {
+      font-size: 17px; font-weight: 600; color: var(--text-primary);
+    }
+
+    /* Nav header */
+    .cr-nav {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-divider);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px 12px;
+      flex-shrink: 0;
+    }
+    .cr-back {
+      width: 40px; height: 40px;
+      border: none; background: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cr-back:active { background: var(--bg-secondary); }
+    .cr-user {
+      display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;
+    }
+    .cr-avatar {
+      width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    }
+    .cr-user-info { display: flex; flex-direction: column; min-width: 0; }
+    .cr-name {
+      font-size: 14px; font-weight: 700; color: var(--text-primary);
+      line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cr-online {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 500; color: #12a154; line-height: 18px;
+    }
+    .cr-online-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #12a154; flex-shrink: 0;
+    }
+    .cr-nav-icon {
+      width: 40px; height: 40px;
+      border: none; background: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cr-nav-icon:active { background: var(--bg-secondary); }
+
+    /* Intent banner */
+    .cr-intent-banner {
+      background: #f2f6fc;
+      padding: 6px 16px;
+      display: flex; align-items: center; gap: 4px;
+      flex-shrink: 0;
+    }
+    .cr-intent-label {
+      font-size: 14px; font-weight: 700; color: var(--text-primary);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .cr-intent-text {
+      font-size: 14px; font-weight: 500; color: var(--text-primary);
+      flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* Product card */
+    .cr-product-card {
+      background: var(--bg-primary);
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 8px rgba(89,89,89,.15);
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px;
+      flex-shrink: 0;
+    }
+    .cr-product-thumb {
+      width: 32px; height: 32px; border-radius: 6px;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .cr-product-info { flex: 1; min-width: 0; }
+    .cr-product-title {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 20px;
+    }
+    .cr-product-price {
+      font-size: 14px; font-weight: 700; color: var(--text-secondary); line-height: 20px;
+    }
+    .cr-product-badge {
+      background: var(--bg-chotot);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px; font-weight: 700; color: var(--text-primary);
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    /* Messages scroll area */
+    .cr-messages {
+      flex: 1; min-height: 0;
+      overflow-y: auto;
+      padding: 16px 16px 8px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .cr-msg { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+    .cr-bubble {
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px; font-weight: 500; color: var(--text-primary);
+      line-height: 20px;
+      max-width: 244px;
+      position: relative;
+    }
+    .cr-reaction {
+      position: absolute;
+      bottom: -10px; right: 6px;
+      background: var(--bg-primary);
+      border-radius: 999px;
+      box-shadow: 0 0 10px rgba(34,34,34,.10);
+      padding: 3px 5px;
+      font-size: 10px;
+      line-height: 1;
+    }
+
+    /* Bottom area */
+    .cr-bottom { flex-shrink: 0; background: var(--bg-app); }
+
+    /* Quick message chips row */
+    .cr-quick-row {
+      display: flex; gap: 8px; align-items: center;
+      padding: 12px 16px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .cr-quick-row::-webkit-scrollbar { display: none; }
+    .cr-quick-chip {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-regular);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      white-space: nowrap; flex-shrink: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cr-quick-chip:active { background: var(--bg-secondary); }
+
+    /* Typing box */
+    .cr-typing-wrap {
+      background: var(--bg-primary);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -2px 8px rgba(89,89,89,.12);
+      overflow: hidden;
+    }
+    .cr-typing-inner {
+      padding: 12px 16px 0;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .cr-placeholder {
+      font-size: 14px; color: var(--text-tertiary); line-height: 20px; min-height: 20px;
+    }
+    .cr-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 3px;
+    }
+    .cr-action-btns { display: flex; gap: 8px; }
+    .cr-action-chip {
+      background: var(--bg-secondary);
+      border: none; border-radius: 999px;
+      padding: 6px 12px;
+      display: flex; align-items: center; gap: 4px;
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cr-action-chip:active { opacity: .75; }
+    .cr-send-btn {
+      width: 40px; height: 40px;
+      background: var(--bg-chotot);
+      border: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cr-home-bar {
+      height: 34px;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 8px;
+    }
+    .cr-home-indicator {
+      width: 139px; height: 5px;
+      background: var(--text-primary);
+      border-radius: 100px;
+      opacity: .2;
+    }
+  </style>
+
+  <!-- Status bar -->
+  <div class="cr-status">
+    <span class="cr-time">9:41</span>
+  </div>
+
+  <!-- Nav -->
+  <div class="cr-nav">
+    <button class="cr-back" onclick="closeChatRoom()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M15.53 4.47a.75.75 0 0 1 0 1.06L9.06 12l6.47 6.47a.75.75 0 1 1-1.06 1.06l-7-7a.75.75 0 0 1 0-1.06l7-7a.75.75 0 0 1 1.06 0z"
+          fill="#222"/>
+      </svg>
+    </button>
+    <div class="cr-user">
+      <img class="cr-avatar" id="cr-avatar" src="https://i.pravatar.cc/64?img=32" alt="" />
+      <div class="cr-user-info">
+        <div class="cr-name" id="cr-name">Nguyen Le Xuan yen</div>
+        <div class="cr-online">
+          <div class="cr-online-dot"></div>
+          Đang hoạt động
+        </div>
+      </div>
+    </div>
+    <!-- Tag icon -->
+    <button class="cr-nav-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M12.586 2.586A2 2 0 0 1 14 2h5a2 2 0 0 1 2 2v5a2 2 0 0 1-.586 1.414l-9 9a2 2 0 0 1-2.828 0l-5-5a2 2 0 0 1 0-2.828l9-9zM17 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+          fill="#222"/>
+      </svg>
+    </button>
+    <!-- Listview icon -->
+    <button class="cr-nav-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M3 6a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 6a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 6a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1z"
+          fill="#222"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Intent banner -->
+  <div class="cr-intent-banner">
+    <span class="cr-intent-label">Tìm:</span>
+    <span class="cr-intent-text">Mua nhà/chung cư, từ 5-7 tỷ, Tp Hồ Chí Minh</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M8.47 4.47a.75.75 0 0 1 1.06 0l7 7a.75.75 0 0 1 0 1.06l-7 7a.75.75 0 1 1-1.06-1.06L14.94 12 8.47 5.53a.75.75 0 0 1 0-1.06z"
+        fill="#222"/>
+    </svg>
+  </div>
+
+  <!-- Product card -->
+  <div class="cr-product-card">
+    <img class="cr-product-thumb"
+      src="https://www.figma.com/api/mcp/asset/3daf2e16-1872-4073-a104-6c804feb3074" alt="" />
+    <div class="cr-product-info">
+      <div class="cr-product-title">BÁN 2PN MASTERI THẢO ĐIỀN GIÁ 7-7.5 TỶ, NHIỀU CĂN</div>
+      <div class="cr-product-price">7 tỷ</div>
+    </div>
+    <div class="cr-product-badge">Đã bán / Ẩn tin</div>
+  </div>
+
+  <!-- Messages -->
+  <div class="cr-messages">
+    <div class="cr-msg">
+      <div class="cr-bubble" style="position:relative">
+        Khi nào có thể đi xem nhà được nhỉ?
+        <div class="cr-reaction">🤍</div>
+      </div>
+    </div>
+    <div class="cr-msg">
+      <div class="cr-bubble" style="position:relative">
+        Hiện tầm 6h tối mình mới rảnh
+        <div class="cr-reaction">🤍</div>
+      </div>
+    </div>
+    <div class="cr-msg">
+      <div class="cr-bubble" style="position:relative">
+        Công việc này lương như nào thế?
+        <div class="cr-reaction">🤍</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom input -->
+  <div class="cr-bottom">
+    <div class="cr-quick-row">
+      <div class="cr-quick-chip">Hàng này còn nhé bạn</div>
+      <div class="cr-quick-chip">Mình sẽ liên hệ lại sớm</div>
+      <div class="cr-quick-chip">Bạn có thể xem vào ngày nào?</div>
+    </div>
+    <div class="cr-typing-wrap">
+      <div class="cr-typing-inner">
+        <div class="cr-placeholder">Nhập tin nhắn ...</div>
+        <div class="cr-actions">
+          <div class="cr-action-btns">
+            <button class="cr-action-chip">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="#595959" stroke-width="1.5"/>
+                <circle cx="8.5" cy="10.5" r="1.5" fill="#595959"/>
+                <path d="M3 16l5-5 4 4 3-3 6 4" stroke="#595959" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Hình/Video
+            </button>
+            <button class="cr-action-chip">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"
+                  fill="#595959"/>
+              </svg>
+              Địa chỉ
+            </button>
+          </div>
+          <button class="cr-send-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="cr-home-bar">
+        <div class="cr-home-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
 </body>
 </html>
