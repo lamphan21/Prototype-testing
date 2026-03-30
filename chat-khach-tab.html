@@ -1487,41 +1487,103 @@
       transform: rotate(-46deg) translate(1px, -1px);
     }
 
-    /* ── Loading overlay on intent list ───────────────────── */
+    /* ── Skeleton loading ───────────────────────────────────── */
     .intent-list { position: relative; }
 
-    .intent-loading {
+    /* Hide real list while loading */
+    .intent-list.is-loading > .intent-item {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .skeleton-list {
       position: absolute;
       inset: 0;
-      background: rgba(247,247,247,.82);
-      z-index: 10;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+      gap: 4px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .18s;
+      transition: opacity .15s;
     }
-    .intent-loading.show {
+    .skeleton-list.show {
       opacity: 1;
       pointer-events: all;
     }
-    .spinner {
-      width: 36px;
-      height: 36px;
-      border: 3px solid var(--border-thin);
-      border-top-color: var(--bg-chotot);
+
+    /* Shimmer base */
+    @keyframes skeletonShimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skel {
+      border-radius: 6px;
+      background: linear-gradient(
+        90deg,
+        var(--bg-tertiary) 25%,
+        #ebebeb 50%,
+        var(--bg-tertiary) 75%
+      );
+      background-size: 800px 100%;
+      animation: skeletonShimmer 1.4s ease-in-out infinite;
+    }
+
+    /* One skeleton card = same height/padding as .intent-item */
+    .skel-card {
+      background: var(--bg-primary);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .skel-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .skel-avatar {
+      width: 40px; height: 40px;
       border-radius: 50%;
-      animation: spin .7s linear infinite;
+      flex-shrink: 0;
     }
-    .spinner-label {
-      font-size: 13px;
-      color: var(--text-tertiary);
-      font-weight: 500;
+    .skel-lines {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .skel-line { height: 12px; }
+    .skel-line.w-60 { width: 60%; }
+    .skel-line.w-40 { width: 40%; }
+    .skel-line.w-80 { width: 80%; }
+    .skel-line.w-30 { width: 30%; }
+    .skel-tag-row {
+      display: flex;
+      gap: 6px;
+    }
+    .skel-tag {
+      height: 22px;
+      border-radius: 999px;
+    }
+    .skel-tag.w-t1 { width: 72px; }
+    .skel-tag.w-t2 { width: 56px; }
+    .skel-tag.w-t3 { width: 88px; }
+    .skel-thumb-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .skel-thumb {
+      width: 48px; height: 48px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .skel-thumb-lines {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
@@ -1637,10 +1699,91 @@
     <!-- Intent Items -->
     <div class="intent-list" id="intent-list">
 
-      <!-- Loading overlay (shown during filter apply) -->
-      <div class="intent-loading" id="intent-loading">
-        <div class="spinner"></div>
-        <span class="spinner-label">Đang lọc khách...</span>
+      <!-- Skeleton loading (shown during filter apply) -->
+      <div class="skeleton-list" id="intent-loading">
+        <!-- Skeleton card × 4 -->
+        <div class="skel-card">
+          <div class="skel-row">
+            <div class="skel skel-avatar"></div>
+            <div class="skel-lines">
+              <div class="skel skel-line w-60"></div>
+              <div class="skel skel-line w-40"></div>
+            </div>
+          </div>
+          <div class="skel-tag-row">
+            <div class="skel skel-tag w-t1"></div>
+            <div class="skel skel-tag w-t2"></div>
+            <div class="skel skel-tag w-t3"></div>
+          </div>
+          <div class="skel-thumb-row">
+            <div class="skel skel-thumb"></div>
+            <div class="skel-thumb-lines">
+              <div class="skel skel-line w-80"></div>
+              <div class="skel skel-line w-30"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skel-card">
+          <div class="skel-row">
+            <div class="skel skel-avatar"></div>
+            <div class="skel-lines">
+              <div class="skel skel-line w-60"></div>
+              <div class="skel skel-line w-40"></div>
+            </div>
+          </div>
+          <div class="skel-tag-row">
+            <div class="skel skel-tag w-t2"></div>
+            <div class="skel skel-tag w-t3"></div>
+          </div>
+          <div class="skel-thumb-row">
+            <div class="skel skel-thumb"></div>
+            <div class="skel-thumb-lines">
+              <div class="skel skel-line w-60"></div>
+              <div class="skel skel-line w-40"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skel-card">
+          <div class="skel-row">
+            <div class="skel skel-avatar"></div>
+            <div class="skel-lines">
+              <div class="skel skel-line w-80"></div>
+              <div class="skel skel-line w-30"></div>
+            </div>
+          </div>
+          <div class="skel-tag-row">
+            <div class="skel skel-tag w-t1"></div>
+            <div class="skel skel-tag w-t3"></div>
+          </div>
+          <div class="skel-thumb-row">
+            <div class="skel skel-thumb"></div>
+            <div class="skel-thumb-lines">
+              <div class="skel skel-line w-80"></div>
+              <div class="skel skel-line w-60"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skel-card">
+          <div class="skel-row">
+            <div class="skel skel-avatar"></div>
+            <div class="skel-lines">
+              <div class="skel skel-line w-40"></div>
+              <div class="skel skel-line w-60"></div>
+            </div>
+          </div>
+          <div class="skel-tag-row">
+            <div class="skel skel-tag w-t2"></div>
+            <div class="skel skel-tag w-t1"></div>
+            <div class="skel skel-tag w-t3"></div>
+          </div>
+          <div class="skel-thumb-row">
+            <div class="skel skel-thumb"></div>
+            <div class="skel-thumb-lines">
+              <div class="skel skel-line w-60"></div>
+              <div class="skel skel-line w-30"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ── Item 1: Nguyễn Le Xuan Yen ── NEW ────────────────── -->
@@ -2404,12 +2547,12 @@
 
     // Brief delay so sheet slide-down is visible before loading appears
     setTimeout(() => {
-      loadingEl.classList.add('show');
+      showLoading();
       chipLabel.textContent = newLabel;
 
       // After 1 s, hide loading → list "refreshes"
       setTimeout(() => {
-        loadingEl.classList.remove('show');
+        hideLoading();
       }, 1000);
     }, 180);
   }
@@ -2425,6 +2568,15 @@
   const notif     = document.getElementById('notif');
   const intentList = document.getElementById('intent-list');
   let notifTimer;
+
+  function showLoading() {
+    intentList.classList.add('is-loading');
+    loadingEl.classList.add('show');
+  }
+  function hideLoading() {
+    loadingEl.classList.remove('show');
+    intentList.classList.remove('is-loading');
+  }
 
   // Show the notification after 3 s (simulates arriving update)
   setTimeout(() => {
@@ -2720,9 +2872,8 @@
     dateChip.classList.remove('selected');
     renderCalGrid();
     closeCalSheet();
-    // Show loading
-    loadingEl.classList.add('show');
-    setTimeout(() => loadingEl.classList.remove('show'), 1000);
+    showLoading();
+    setTimeout(() => hideLoading(), 1000);
   }
   function calApply() {
     if (!calPending) { closeCalSheet(); return; }
@@ -2732,9 +2883,8 @@
     dateChipLabel.textContent = `${dd}/${mm}/${calSelected.year}`;
     dateChip.classList.add('selected');
     closeCalSheet();
-    // Show 1s loading
-    loadingEl.classList.add('show');
-    setTimeout(() => loadingEl.classList.remove('show'), 1000);
+    showLoading();
+    setTimeout(() => hideLoading(), 1000);
   }
 
   // Swipe-down to dismiss calendar sheet
