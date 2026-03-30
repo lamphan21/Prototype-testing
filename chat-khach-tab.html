@@ -2570,15 +2570,22 @@
 
   function onNotifTap() {
     dismissNotif();
-
-    // Show loading spinner on intent list
-    const loading = document.getElementById('intent-loading');
-    loading.classList.add('show');
-
+    showLoading();
     setTimeout(() => {
-      loading.classList.remove('show');
+      hideLoading();
       injectNewCustomers();
+      // Always reset date filter to today and update summary
+      resetDateToToday();
     }, 1000);
+  }
+
+  function resetDateToToday() {
+    calSelected = null;
+    calPending  = null;
+    if (dateChipLabel) dateChipLabel.textContent = 'Theo ngày';
+    if (dateChip)      dateChip.classList.remove('selected');
+    if (typeof renderCalGrid === 'function') renderCalGrid();
+    updateSummary(null);
   }
 
   function injectNewCustomers() {
