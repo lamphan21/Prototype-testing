@@ -211,36 +211,18 @@
       line-height: 16px;
     }
 
-    /* ── Stats Banner ───────────────────────────────────────── */
-    .stats-banner {
+    /* ── Lead summary text ──────────────────────────────────── */
+    .lead-summary {
       background: var(--bg-primary);
-      display: flex;
-      padding: 16px 0 12px;
-      margin: 0 16px;
-      border-bottom: 1px solid var(--border-thin);
-    }
-    .stat-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-    .stat-item + .stat-item {
-      border-left: 1px solid var(--border-thin);
-    }
-    .stat-value {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 28px;
-    }
-    .stat-value.highlight { color: #f07800; }
-    .stat-label {
-      font-size: 12px;
-      font-weight: 400;
+      padding: 10px 16px 4px;
+      font-size: 13px;
+      font-weight: 500;
       color: var(--text-secondary);
-      line-height: 16px;
+      line-height: 18px;
+    }
+    .lead-summary strong {
+      color: var(--text-primary);
+      font-weight: 700;
     }
 
     /* ── Filter Row ─────────────────────────────────────────── */
@@ -1660,22 +1642,6 @@
       </div>
     </div>
 
-    <!-- Stats Banner -->
-    <div class="stats-banner">
-      <div class="stat-item">
-        <span class="stat-value highlight" id="stat-today">5</span>
-        <span class="stat-label">Hôm nay</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-value" id="stat-month">38</span>
-        <span class="stat-label">Tháng này</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-value" id="stat-year">214</span>
-        <span class="stat-label">Năm nay</span>
-      </div>
-    </div>
-
     <!-- Filter Row -->
     <div class="filter-row">
       <div class="filter-chip" id="filter-chip" onclick="openSheet()">
@@ -1695,6 +1661,9 @@
         <span id="date-chip-label">Theo ngày</span>
       </div>
     </div>
+
+    <!-- Lead summary text -->
+    <p class="lead-summary" id="lead-summary">Bạn có <strong>3 khách mới</strong> hôm nay</p>
 
     <!-- Intent Items -->
     <div class="intent-list" id="intent-list">
@@ -2802,6 +2771,25 @@
   const calDaysEl     = document.getElementById('cal-days');
   const dateChip      = document.getElementById('date-chip');
   const dateChipLabel = document.getElementById('date-chip-label');
+  const leadSummary   = document.getElementById('lead-summary');
+
+  // Lead counts per "day" — today is 3, others randomised for prototype
+  function getLeadCount(day, month, year) {
+    const t = today;
+    if (day === t.getDate() && month === t.getMonth() && year === t.getFullYear()) return 3;
+    // Seed a deterministic random count for other days
+    return ((day * 7 + month * 13 + year) % 9) + 1;
+  }
+  function updateSummary(sel) {
+    if (!sel) {
+      leadSummary.innerHTML = 'Bạn có <strong>3 khách mới</strong> hôm nay';
+    } else {
+      const dd = String(sel.day).padStart(2,'0');
+      const mm = String(sel.month + 1).padStart(2,'0');
+      const count = getLeadCount(sel.day, sel.month, sel.year);
+      leadSummary.innerHTML = `Bạn có <strong>${count} khách</strong> vào ngày ${dd}/${mm}/${sel.year}`;
+    }
+  }
 
   const today = new Date();
   let calYear  = today.getFullYear();
@@ -2872,6 +2860,7 @@
     dateChip.classList.remove('selected');
     renderCalGrid();
     closeCalSheet();
+    updateSummary(null);
     showLoading();
     setTimeout(() => hideLoading(), 1000);
   }
@@ -2883,6 +2872,7 @@
     dateChipLabel.textContent = `${dd}/${mm}/${calSelected.year}`;
     dateChip.classList.add('selected');
     closeCalSheet();
+    updateSummary(calSelected);
     showLoading();
     setTimeout(() => hideLoading(), 1000);
   }
