@@ -2503,7 +2503,7 @@
 
   <!-- Footer -->
   <div class="bs-footer">
-    <button class="bs-btn bs-btn-cancel" onclick="cancelFilter()">Huỷ</button>
+    <button class="bs-btn bs-btn-cancel" onclick="clearFilter()">Xoá lọc</button>
     <button class="bs-btn bs-btn-apply" onclick="applyFilter()">Áp dụng</button>
   </div>
 
@@ -2573,8 +2573,18 @@
     }, 180);
   }
 
-  function cancelFilter() {
+  function clearFilter() {
+    // Reset all checkboxes back to "Tất cả"
+    document.querySelectorAll('.bs-item').forEach(i => i.classList.remove('selected'));
+    document.querySelectorAll('.bs-item[data-all]').forEach(i => i.classList.add('selected'));
     closeSheet();
+
+    setTimeout(() => {
+      showLoading();
+      chipLabel.textContent = defaultChipLabel;
+      filterChip.classList.remove('selected');
+      setTimeout(() => { hideLoading(); }, 1000);
+    }, 180);
   }
 
   // Close on swipe-down (drag handle feel on mobile)
