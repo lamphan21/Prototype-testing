@@ -2703,8 +2703,9 @@
     const badgePill = document.querySelector('.tab-item.active .badge-pill span');
     if (badgePill) badgePill.textContent = '5';
 
-    // Scroll so new cards are visible
-    intentList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scroll the content area to the top so new cards are visible
+    const contentEl = document.querySelector('.content');
+    if (contentEl) contentEl.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Add flash + glow class once the expand animation has landed (~500ms)
     setTimeout(() => {
