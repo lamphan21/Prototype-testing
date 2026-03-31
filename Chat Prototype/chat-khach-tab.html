@@ -984,13 +984,15 @@
       50%       { box-shadow: 0 0 0 6px rgba(255,212,0,0); }
     }
 
-    /* Wrapper — fixed just below the sticky filter row */
+    /* Wrapper — fixed just below the sticky filter row, centered */
     .notif-wrap {
       position: fixed;
-      top: 214px; /* status(44) + topnav(52) + tab-wrap(52) + filter-row(54) + gap(12) */
-      left: 12px;
-      right: 12px;
+      top: 214px;
+      left: 0;
+      right: 0;
       z-index: 50;
+      display: flex;
+      justify-content: center;
       opacity: 0;
       pointer-events: none;
       transform: translateY(-110%) scale(.96);
@@ -1006,93 +1008,31 @@
       pointer-events: none;
     }
 
-    /* DS Notification(Mobile) IOS card */
-    .notif-card {
-      background: rgba(255,255,255,.96);
-      border-radius: 14px;
-      box-shadow: 0 8px 28px rgba(34,34,34,.18);
-      display: flex;
+    /* DS Button M / Primary-black / isPill */
+    .notif-btn {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
+      gap: 6px;
+      height: 32px;
+      padding: 0 14px 0 10px;
+      background: var(--bg-inverted);
+      border: none;
+      border-radius: 999px;
       cursor: pointer;
+      box-shadow: 0 4px 16px rgba(34,34,34,.28);
       -webkit-tap-highlight-color: transparent;
-      /* frosted-glass feel */
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.7);
-      min-height: 80px;
+      white-space: nowrap;
     }
-    .notif-card:active { transform: scale(.98); }
-
-    /* Left: app icon thumbnail */
-    .notif-thumb {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: var(--bg-chotot);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      animation: badgePulse 2s ease-out 1.6s infinite;
-    }
-
-    /* Right: text area */
-    .notif-content {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .notif-app {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: .4px;
-      line-height: 14px;
-    }
-    .notif-title {
+    .notif-btn:active { opacity: .85; transform: scale(.97); }
+    .notif-btn-label {
       font-size: 14px;
       font-weight: 700;
-      color: var(--text-primary);
+      color: #ffffff;
       line-height: 20px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
-    .notif-sub {
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--text-secondary);
-      line-height: 18px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Far right: time + chevron */
-    .notif-meta {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .notif-time {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      line-height: 14px;
-      white-space: nowrap;
-    }
+    /* keep .notif-chevron selector alive so nothing breaks */
     .notif-chevron {
-      width: 16px;
-      height: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: none;
       opacity: .4;
     }
 
@@ -2295,38 +2235,13 @@
      DS Notification(Mobile) IOS — new customer update banner
 ══════════════════════════════════════════════════════════ -->
 <div class="notif-wrap" id="notif" role="status" aria-live="polite">
-  <div class="notif-card" onclick="onNotifTap()">
-
-    <!-- App icon thumbnail (DS: rounded square with brand colour) -->
-    <div class="notif-thumb">
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-        <!-- Two people silhouette -->
-        <circle cx="9.5"  cy="8"  r="3.5" fill="#222"/>
-        <circle cx="17"   cy="8"  r="3.5" fill="#222" opacity=".55"/>
-        <path d="M1 22c0-4.418 3.806-8 8.5-8s8.5 3.582 8.5 8" stroke="#222" stroke-width="2" stroke-linecap="round" fill="none"/>
-        <path d="M17 14c3.5 0 6.5 2.686 6.5 6" stroke="#222" stroke-width="2" stroke-linecap="round" fill="none" opacity=".55"/>
-      </svg>
-    </div>
-
-    <!-- Text content -->
-    <div class="notif-content">
-      <span class="notif-app">Chợ Tốt · Liên hệ</span>
-      <span class="notif-title">Bạn có 2 khách mới 🎉</span>
-      <span class="notif-sub">Hãy xem thông tin và tư vấn khách nhé</span>
-    </div>
-
-    <!-- Time + chevron -->
-    <div class="notif-meta">
-      <span class="notif-time">vừa xong</span>
-      <div class="notif-chevron">
-        <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-          <path d="M1 1l5 5-5 5" stroke="#222" stroke-width="1.5"
-            stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-    </div>
-
-  </div>
+  <button class="notif-btn" onclick="onNotifTap()">
+    <!-- Arrowup-fill icon (DS v3.0) -->
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M11.3751 17.0003V9.33329L8.68952 11.8909L8.61237 11.9583C8.21191 12.2689 7.63252 12.2316 7.27546 11.8567C6.89474 11.4568 6.91074 10.8235 7.31061 10.4427L11.6856 6.27567L11.7598 6.21122C12.146 5.90946 12.7024 5.93111 13.0645 6.27567L17.4395 10.4427L17.5098 10.5169C17.8399 10.9017 17.8317 11.4817 17.4747 11.8567C17.1176 12.2316 16.5382 12.2689 16.1378 11.9583L16.0606 11.8909L13.3751 9.33329V17.0003C13.3751 17.5526 12.9274 18.0003 12.3751 18.0003C11.8228 18.0003 11.3751 17.5526 11.3751 17.0003Z" fill="#ffffff"/>
+    </svg>
+    <span class="notif-btn-label">Bạn có 3 khách mới</span>
+  </button>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
