@@ -1118,6 +1118,9 @@
     /* Clickable filter chip */
     .filter-chip { cursor: pointer; user-select: none; }
     .filter-chip:active { opacity: .75; }
+    .chip-close { display: none; align-items: center; justify-content: center; }
+    .filter-chip.selected .chevron { display: none; }
+    .filter-chip.selected .chip-close { display: flex; }
     .filter-chip.selected {
       background: var(--bg-secondary);
       border-color: var(--border-black);
@@ -1393,16 +1396,16 @@
       transition: border-color .15s, background .15s;
     }
     .bs-item.selected .bs-checkbox {
-      border-color: var(--border-black);
-      background: var(--border-black);
+      border-color: var(--bg-chotot);
+      background: var(--bg-chotot);
     }
     .bs-item.selected .bs-checkbox::after {
       content: '';
       display: block;
       width: 11px;
       height: 6px;
-      border-left: 2px solid #fff;
-      border-bottom: 2px solid #fff;
+      border-left: 2px solid #222;
+      border-bottom: 2px solid #222;
       transform: rotate(-46deg) translate(1px, -1px);
     }
 
@@ -1612,10 +1615,15 @@
     <!-- Filter Row -->
     <div class="filter-row">
       <div class="filter-chip" id="filter-chip" onclick="openSheet()">
-        <span id="filter-chip-label">Khách theo tin đăng</span>
-        <div class="chevron">
+        <span id="filter-chip-label">Tin đăng</span>
+        <div class="chevron" id="filter-chip-chevron">
           <svg width="11" height="6" viewBox="0 0 11 6" fill="none">
             <path d="M1 1l4.5 4L10 1" stroke="#222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="chip-close" id="filter-chip-close" onclick="event.stopPropagation(); clearFilter();">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48606 2 2 6.48606 2 12C2 17.5139 6.48606 22 12 22C17.5139 22 22 17.5139 22 12C22 6.48606 17.5139 2 12 2ZM15.6207 14.5332C15.9121 14.8262 15.9121 15.2998 15.6207 15.5928C15.4746 15.7393 15.2842 15.8125 15.0938 15.8125C14.9033 15.8125 14.7129 15.7393 14.5669 15.5928L12 13.0605L9.43311 15.5928C9.28711 15.7393 9.09668 15.8125 8.90625 15.8125C8.71582 15.8125 8.52539 15.7393 8.37939 15.5928C8.08789 15.2998 8.08789 14.8262 8.37939 14.5332L10.9463 12L8.37939 9.4668C8.08789 9.1738 8.08789 8.7002 8.37939 8.4072C8.67139 8.1147 9.14111 8.1147 9.43311 8.4072L12 10.9395L14.5669 8.4072C14.8589 8.1147 15.3286 8.1147 15.6207 8.4072C15.9121 8.7002 15.9121 9.1738 15.6207 9.4668L13.0537 12L15.6207 14.5332Z" fill="#222222"/>
           </svg>
         </div>
       </div>
@@ -2308,27 +2316,11 @@
           stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-    <span class="bs-title">Khách theo tin đăng</span>
+    <span class="bs-title">Tin đăng</span>
   </div>
 
   <!-- Scrollable listing rows -->
   <div class="bs-body">
-
-    <!-- "Tất cả tin đăng" (selected by default) -->
-    <div class="bs-item selected" data-label="Khách theo tin đăng" data-all onclick="toggleItem(this)">
-      <div class="bs-thumb" style="background:var(--bg-secondary);">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#595959" stroke-width="1.5"/>
-          <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#595959" stroke-width="1.5"/>
-          <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#595959" stroke-width="1.5"/>
-          <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#595959" stroke-width="1.5"/>
-        </svg>
-      </div>
-      <div class="bs-item-info">
-        <span class="bs-item-title">Tất cả tin đăng</span>
-      </div>
-      <div class="bs-checkbox"></div>
-    </div>
 
     <!-- Listing 1 -->
     <div class="bs-item" data-label="MASTERI THẢO ĐIỀN 2PN" onclick="toggleItem(this)">
@@ -2444,7 +2436,7 @@
   }
 
   const filterChip  = document.getElementById('filter-chip');
-  const defaultChipLabel = 'Khách theo tin đăng';
+  const defaultChipLabel = 'Tin đăng';
   const allItem = document.querySelector('.bs-item[data-all]');
 
   function toggleItem(el) {
@@ -2481,7 +2473,7 @@
         chipLabel.textContent = specific[0].dataset.label;
         filterChip.classList.add('selected');
       } else {
-        chipLabel.textContent = `Khách theo tin đăng (${specific.length})`;
+        chipLabel.textContent = `Tin đăng (${specific.length})`;
         filterChip.classList.add('selected');
       }
       setTimeout(() => { hideLoading(); }, 1000);
