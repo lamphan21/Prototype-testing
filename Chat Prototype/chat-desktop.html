@@ -19,8 +19,10 @@
       --text-secondary:#595959;
       --text-tertiary: #8c8c8c;
       --text-blank:   #ffffff;
+      --text-bold:         #222222;
       --text-brand:        #cc8f00;
       --icon-chotot-bold:  #cc8f00;
+      --icon-secondary:    #595959;
       --border-regular:#dddddd;
       --border-divider:#f4f4f4;
       --border-thin:  #e8e8e8;
@@ -221,6 +223,7 @@
       cursor: pointer; position: relative;
       border: none; background: transparent;
     }
+    .icon-nav-item { color: var(--icon-secondary); }
     .icon-nav-item:hover { background: var(--bg-secondary); }
     .icon-nav-item.active {
       background: #f7f7f7;
@@ -230,7 +233,7 @@
       font-size: 14px; font-weight: 400;
       color: var(--text-secondary); line-height: 20px;
     }
-    .icon-nav-item.active .icon-label { font-weight: 700; color: var(--text-brand); }
+    .icon-nav-item.active .icon-label { font-weight: 700; color: var(--text-bold); }
     .icon-nav-badge {
       position: absolute; top: 3px; right: 3px;
       background: #ee3742;
@@ -922,12 +925,11 @@
         <span class="icon-label">Tin nhắn</span>
       </button>
       <button class="icon-nav-item" onclick="switchTab('khach', this)" style="position:relative;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="9" cy="7" r="4" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Groupofuser-outline (DS v3.0) -->
+        <svg width="24" height="24" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.84375 10.1912C5.66573 10.1912 4.16662 10.7193 3.2346 11.4569C2.36954 12.1415 1.93335 13.0504 1.89138 14.0756H13.7961C13.7542 13.0505 13.3178 12.1415 12.4529 11.4569C11.5209 10.7193 10.0217 10.1912 7.84375 10.1912ZM9.48823 3.6016C9.48823 2.6755 8.75174 1.92445 7.84375 1.92436C6.93569 1.92436 6.19927 2.67545 6.19927 3.6016C6.19943 4.52761 6.93579 5.2779 7.84375 5.2779C8.75164 5.27781 9.48807 4.52756 9.48823 3.6016ZM13.7464 3.6016C13.7464 2.9821 13.4176 2.4394 12.9237 2.14799C12.4728 1.88191 12.3184 1.29338 12.5791 0.833451C12.84 0.37347 13.4179 0.215945 13.8689 0.48203C14.9218 1.10328 15.6331 2.26747 15.6331 3.6016C15.633 4.93554 14.9216 6.099 13.8689 6.72023L13.7823 6.76533C13.3464 6.96544 12.8236 6.79995 12.5791 6.3688C12.3186 5.90889 12.4728 5.32027 12.9237 5.05426L13.1006 4.93399C13.4945 4.62657 13.7463 4.14367 13.7464 3.6016ZM15.6875 14.2401C15.6875 15.1139 15.0409 16 14.0403 16H1.64724C0.64663 16 0 15.1139 0 14.2401C3.57154e-05 12.5649 0.696973 11.0293 2.07748 9.93658C3.43731 8.86037 5.38878 8.26685 7.84375 8.26685C10.2986 8.26688 12.2493 8.86043 13.6091 9.93658C14.9898 11.0293 15.6875 12.5648 15.6875 14.2401ZM20 14.2401C20 15.1139 19.3534 16 18.3528 16H17.9244C17.4034 16 16.9811 15.5691 16.981 15.0378C16.981 14.5064 17.4033 14.0756 17.9244 14.0756H18.1049C18.0673 13.5763 17.8694 12.8788 17.5264 12.1673C17.1917 11.4732 16.7787 10.8866 16.3914 10.5304L16.2274 10.3923L16.1537 10.3293C15.8015 9.99947 15.7443 9.44491 16.0367 9.04581C16.329 8.64685 16.8668 8.54507 17.2767 8.79587L17.3569 8.8513L17.4987 8.96406C18.2009 9.55141 18.797 10.4411 19.2197 11.3178C19.6701 12.2521 20 13.3301 20 14.2401ZM11.375 3.6016C11.3748 5.59035 9.79368 7.20217 7.84375 7.20226C5.89375 7.20226 4.31265 5.59041 4.3125 3.6016C4.3125 1.61265 5.89365 0 7.84375 0C9.79378 8.75847e-05 11.375 1.61271 11.375 3.6016Z" fill="currentColor"/>
         </svg>
-        <span class="icon-label" style="color:var(--text-tertiary);">Khách</span>
+        <span class="icon-label">Khách</span>
         <span class="icon-nav-badge">2</span>
       </button>
     </div>
