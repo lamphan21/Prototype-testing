@@ -128,7 +128,7 @@
     .nav-icon-group { display: flex; align-items: center; gap: 8px; }
     /* Plain icon button (40×40, no border) */
     .nav-icon-btn {
-      width: 40px; height: 40px; border-radius: var(--radius-pill);
+      width: 40px; height: 40px; min-width: 40px; border-radius: var(--radius-pill);
       display: flex; align-items: center; justify-content: center;
       background: transparent; border: none; cursor: pointer;
       position: relative; overflow: visible; flex-shrink: 0;
@@ -837,11 +837,11 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#ffd400"/>
         </svg>
-        <!-- Label + ChevrondownFill -->
+        <!-- Label + ChevrondownFill (24px per DS) -->
         <span style="display:flex;align-items:center;gap:2px;">
           <span style="font:600 14px var(--font);color:var(--text-primary);">Tp. Hồ Chí Minh</span>
-          <!-- ChevrondownFill -->
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <!-- ChevrondownFill 24px -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M6 9l6 6 6-6" stroke="#222" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </span>
@@ -888,7 +888,7 @@
       </div>
 
       <!-- Liên hệ button (outline, icon + label + badge) -->
-      <div class="nav-badge-wrap">
+      <div class="nav-badge-wrap" style="width:110px;flex-shrink:0;">
         <button class="nav-lienhe-btn" aria-label="Liên hệ">
           <!-- Livechat / chat icon -->
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
