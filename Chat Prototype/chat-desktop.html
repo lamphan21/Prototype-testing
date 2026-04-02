@@ -201,33 +201,33 @@
 
     /* ─── LEFT ICON COLUMN ────────────────────────────────────── */
     .left-icon-col {
-      width: 56px;
+      width: 80px;
       background: var(--bg-primary);
       border-right: 1px solid var(--border-divider);
       display: flex; flex-direction: column;
       align-items: center;
-      padding: 8px 0;
+      padding: 8px 12px;
       gap: 4px;
       flex-shrink: 0;
     }
     .icon-nav-item {
-      width: 48px;
+      width: 100%;
       border-radius: 12px;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 2px; padding: 6px 4px;
+      gap: 4px; padding: 6px 4px;
       cursor: pointer; position: relative;
       border: none; background: transparent;
     }
     .icon-nav-item:hover { background: var(--bg-secondary); }
     .icon-nav-item.active {
-      background: var(--bg-chotot);
+      background: #f7f7f7;
     }
     .icon-nav-item .icon-label {
-      font-size: 10px; font-weight: 600;
-      color: var(--text-secondary); line-height: 1;
+      font-size: 14px; font-weight: 400;
+      color: var(--text-secondary); line-height: 20px;
     }
-    .icon-nav-item.active .icon-label { color: var(--text-primary); }
+    .icon-nav-item.active .icon-label { font-weight: 700; color: var(--text-primary); }
     .icon-nav-badge {
       position: absolute; top: 3px; right: 3px;
       background: #ee3742;
