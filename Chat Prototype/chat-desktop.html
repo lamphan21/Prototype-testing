@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>Chat Desktop – Chợ Tốt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ─── DS Tokens ───────────────────────────────────────────── */
+    :root {
+      --bg-primary:   #ffffff;
+      --bg-secondary: #f4f4f4;
+      --bg-app:       #f7f7f7;
+      --bg-chotot:    #ffd400;
+      --bg-tertiary:  #e8e8e8;
+      --bg-tonal:     #fff8d6;
+      --text-primary: #222222;
+      --text-secondary:#595959;
+      --text-tertiary: #8c8c8c;
+      --text-blank:   #ffffff;
+      --border-regular:#dddddd;
+      --border-divider:#f4f4f4;
+      --border-thin:  #e8e8e8;
+      --border-black: #222222;
+      --border-brand: #ffd400;
+      --green:        #00b14f;
+      --font: 'Reddit Sans', sans-serif;
+      --radius-pill:  999px;
+      --radius-card:  12px;
+      --radius-modal: 20px;
+      --radius-ad:    6px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100vh; overflow: hidden; }
+    body {
+      font-family: var(--font);
+      background: var(--bg-app);
+      display: flex;
+      flex-direction: column;
+      color: var(--text-primary);
+    }
+
+    /* ─── TOP NAV ─────────────────────────────────────────────── */
+    .top-nav {
+      flex-shrink: 0;
+      height: 64px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-divider);
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 0 24px;
+      z-index: 100;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    }
+    .nav-menu-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; border: none; cursor: pointer;
+    }
+    .nav-menu-btn:hover { background: var(--bg-secondary); }
+    .nav-logo-text {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 0;
+    }
+    .logo-cho { color: var(--text-primary); }
+    .logo-tot { color: var(--text-primary); }
+    .logo-caret {
+      background: var(--bg-chotot);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .nav-search-area {
+      flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0;
+    }
+    .nav-location-btn {
+      display: flex; align-items: center; gap: 4px;
+      background: var(--bg-tonal);
+      border: 1px solid var(--border-brand);
+      border-radius: var(--radius-pill);
+      padding: 0 12px;
+      height: 40px;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .nav-location-btn span {
+      font-size: 14px; font-weight: 600; color: var(--text-primary);
+    }
+    .nav-search-bar {
+      flex: 1; height: 40px;
+      background: var(--bg-secondary);
+      border-radius: 99px;
+      display: flex; align-items: center;
+      padding: 0 4px 0 16px; gap: 8px;
+      min-width: 0;
+    }
+    .nav-search-bar input {
+      flex: 1; border: none; background: transparent;
+      font: 14px var(--font); color: var(--text-tertiary);
+      outline: none;
+    }
+    .nav-search-submit {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bg-chotot);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .nav-actions {
+      display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+    }
+    .nav-icon-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; border: none; cursor: pointer;
+      position: relative;
+    }
+    .nav-icon-btn:hover { background: var(--bg-secondary); }
+    .nav-badge {
+      position: absolute; top: 4px; right: 4px;
+      background: #ee3742;
+      color: #fff; font-size: 10px; font-weight: 700;
+      border-radius: var(--radius-pill);
+      min-width: 16px; height: 16px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 4px;
+      border: 1.5px solid var(--bg-primary);
+    }
+    .nav-lienhe-btn {
+      display: flex; align-items: center; gap: 6px;
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-pill);
+      padding: 0 12px; height: 36px;
+      background: var(--bg-primary); cursor: pointer;
+      font-size: 14px; font-weight: 500; color: var(--text-primary);
+      position: relative;
+    }
+    .nav-lienhe-btn:hover { background: var(--bg-secondary); }
+    .nav-quanly-btn {
+      padding: 0 16px; height: 36px;
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-pill);
+      background: var(--bg-primary); cursor: pointer;
+      font-size: 14px; font-weight: 600; color: var(--text-primary);
+      white-space: nowrap;
+    }
+    .nav-quanly-btn:hover { background: var(--bg-secondary); }
+    .nav-dangban-btn {
+      padding: 0 16px; height: 36px;
+      background: var(--bg-chotot);
+      border: none; border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-size: 14px; font-weight: 700; color: var(--text-primary);
+      white-space: nowrap;
+    }
+    .nav-dangban-btn:hover { opacity: .9; }
+    .nav-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #e8b4a0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: #7a3b20;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .nav-avatar-wrap {
+      display: flex; align-items: center; gap: 4px; cursor: pointer;
+    }
+
+    /* ─── MAIN LAYOUT ─────────────────────────────────────────── */
+    .main-layout {
+      flex: 1; display: flex; overflow: hidden; min-height: 0;
+    }
+
+    /* ─── LEFT ICON COLUMN ────────────────────────────────────── */
+    .left-icon-col {
+      width: 56px;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--border-divider);
+      display: flex; flex-direction: column;
+      align-items: center;
+      padding: 8px 0;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .icon-nav-item {
+      width: 48px;
+      border-radius: 12px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2px; padding: 6px 4px;
+      cursor: pointer; position: relative;
+      border: none; background: transparent;
+    }
+    .icon-nav-item:hover { background: var(--bg-secondary); }
+    .icon-nav-item.active {
+      background: var(--bg-chotot);
+    }
+    .icon-nav-item .icon-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--text-secondary); line-height: 1;
+    }
+    .icon-nav-item.active .icon-label { color: var(--text-primary); }
+    .icon-nav-badge {
+      position: absolute; top: 3px; right: 3px;
+      background: #ee3742;
+      color: #fff; font-size: 9px; font-weight: 700;
+      border-radius: var(--radius-pill);
+      min-width: 14px; height: 14px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 3px;
+      border: 1.5px solid var(--bg-primary);
+    }
+
+    /* ─── SIDEBAR (chat list) ─────────────────────────────────── */
+    .sidebar {
+      width: 296px;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--border-divider);
+      display: flex; flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .sidebar-header {
+      padding: 16px 16px 12px;
+      flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-size: 20px; font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .sidebar-search {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sidebar-search-input {
+      flex: 1; height: 36px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-pill);
+      border: none; outline: none;
+      padding: 0 14px 0 38px;
+      font: 14px var(--font); color: var(--text-primary);
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z' stroke='%238c8c8c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M21 21L16.65 16.65' stroke='%238c8c8c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      background-size: 16px;
+    }
+    .sidebar-search-input::placeholder { color: var(--text-tertiary); }
+    .sidebar-more-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: transparent; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-more-btn:hover { background: var(--bg-secondary); }
+
+    /* Filter tabs */
+    .sidebar-tabs {
+      display: flex; gap: 6px;
+      padding: 0 16px 12px;
+      overflow-x: auto; flex-shrink: 0;
+    }
+    .sidebar-tabs::-webkit-scrollbar { display: none; }
+    .stab {
+      padding: 4px 12px; height: 28px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-thin);
+      background: var(--bg-primary);
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer; white-space: nowrap;
+    }
+    .stab.active {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+      color: var(--text-blank);
+    }
+    .stab:hover:not(.active) { background: var(--bg-secondary); }
+
+    /* Notification bar */
+    .sidebar-notif {
+      margin: 0 12px 8px;
+      background: #fff0f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex; align-items: flex-start; gap: 8px;
+      flex-shrink: 0;
+    }
+    .sidebar-notif-icon {
+      width: 20px; height: 20px; background: #ee3742;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .sidebar-notif-body { flex: 1; min-width: 0; }
+    .sidebar-notif-title {
+      font-size: 13px; font-weight: 700; color: var(--text-primary); line-height: 18px;
+    }
+    .sidebar-notif-sub {
+      font-size: 12px; color: var(--text-secondary); line-height: 17px;
+    }
+    .sidebar-notif-close {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: transparent; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--text-tertiary);
+    }
+    .sidebar-notif-close:hover { background: rgba(0,0,0,.06); }
+
+    /* Chat list */
+    .chat-list {
+      flex: 1; overflow-y: auto; min-height: 0;
+    }
+    .chat-list::-webkit-scrollbar { width: 4px; }
+    .chat-list::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 2px; }
+    .chat-item {
+      display: flex; gap: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border-divider);
+      transition: background .12s;
+    }
+    .chat-item:hover { background: var(--bg-secondary); }
+    .chat-item.active { background: #fff8d6; }
+    .chat-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700;
+      position: relative;
+    }
+    .chat-avatar-online::after {
+      content: '';
+      position: absolute; bottom: 1px; right: 1px;
+      width: 10px; height: 10px;
+      background: var(--green);
+      border-radius: 50%; border: 2px solid var(--bg-primary);
+    }
+    .chat-item-body { flex: 1; min-width: 0; }
+    .chat-item-row1 {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 2px;
+    }
+    .chat-item-name {
+      font-size: 14px; font-weight: 600; color: var(--text-primary);
+      flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .chat-item-time {
+      font-size: 12px; color: var(--text-tertiary); flex-shrink: 0;
+    }
+    .chat-item-badge {
+      background: #ee3742;
+      color: #fff; font-size: 10px; font-weight: 700;
+      border-radius: var(--radius-pill);
+      min-width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 4px; flex-shrink: 0;
+    }
+    .chat-item-row2 {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 3px;
+    }
+    .chat-item-tag {
+      display: flex; align-items: center; gap: 3px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-pill);
+      padding: 1px 5px;
+      font-size: 10px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .tag-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .tag-red .tag-dot { background: #ee3742; }
+    .tag-green .tag-dot { background: var(--green); }
+    .tag-blue .tag-dot { background: #1a73e8; }
+    .tag-gray .tag-dot { background: var(--text-secondary); }
+    .chat-item-msg {
+      font-size: 13px; color: var(--text-secondary);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      line-height: 18px;
+    }
+    .chat-item-intent {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; color: var(--text-tertiary);
+      margin-top: 3px; overflow: hidden;
+    }
+    .chat-item-intent span {
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
+    }
+    .chat-item-verified {
+      width: 14px; height: 14px; background: #1a73e8;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .official-avatar {
+      background: var(--bg-chotot);
+      font-size: 16px; font-weight: 900;
+      color: var(--text-primary);
+    }
+
+    /* ─── CHAT PANEL ──────────────────────────────────────────── */
+    .chat-panel {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden; min-width: 0;
+      background: var(--bg-app);
+    }
+    /* Chat header */
+    .chat-header {
+      height: 64px; flex-shrink: 0;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-divider);
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 16px;
+    }
+    .chat-header-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #e8b4a0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #7a3b20;
+      flex-shrink: 0; position: relative;
+    }
+    .chat-header-avatar::after {
+      content: '';
+      position: absolute; bottom: 1px; right: 1px;
+      width: 10px; height: 10px;
+      background: var(--green);
+      border-radius: 50%; border: 2px solid var(--bg-primary);
+    }
+    .chat-header-info { flex: 1; min-width: 0; }
+    .chat-header-name {
+      font-size: 15px; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .chat-header-status {
+      font-size: 12px; color: var(--green); font-weight: 500;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .chat-header-status::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%; background: var(--green); flex-shrink: 0;
+    }
+    .chat-header-tag {
+      display: flex; align-items: center; gap: 3px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-pill);
+      padding: 2px 6px;
+      font-size: 10px; font-weight: 700;
+    }
+    .chat-header-actions {
+      display: flex; gap: 4px; flex-shrink: 0;
+    }
+    .chat-icon-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: transparent; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .chat-icon-btn:hover { background: var(--bg-secondary); }
+
+    /* Product card in chat */
+    .chat-listing-card {
+      margin: 12px 16px 0;
+      background: var(--bg-primary);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-thin);
+      display: flex; gap: 12px;
+      padding: 10px 12px;
+      align-items: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .chat-listing-card:hover { background: #fafafa; }
+    .chat-listing-img {
+      width: 56px; height: 56px; border-radius: 8px;
+      background: linear-gradient(135deg, #d0e8d0 0%, #a8c8a8 100%);
+      flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .chat-listing-info { flex: 1; min-width: 0; }
+    .chat-listing-title {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      margin-bottom: 4px;
+    }
+    .chat-listing-price {
+      font-size: 13px; font-weight: 700; color: var(--text-primary);
+    }
+    .chat-listing-badges { display: flex; gap: 6px; margin-top: 4px; }
+    .listing-badge {
+      padding: 2px 8px; border-radius: var(--radius-pill);
+      font-size: 11px; font-weight: 700;
+      white-space: nowrap;
+    }
+    .listing-badge-sold {
+      background: #ee3742; color: #fff;
+    }
+    .listing-badge-hidden {
+      background: var(--text-secondary); color: #fff;
+    }
+
+    /* Messages area */
+    .chat-messages {
+      flex: 1; overflow-y: auto; min-height: 0;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 2px; }
+    .msg-row {
+      display: flex;
+    }
+    .msg-row.from-buyer { justify-content: flex-start; }
+    .msg-row.from-seller { justify-content: flex-end; }
+    .msg-avatar-sm {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #e8b4a0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #7a3b20;
+      flex-shrink: 0; margin-right: 6px; align-self: flex-end;
+    }
+    .msg-bubble {
+      max-width: 60%;
+      padding: 8px 12px;
+      border-radius: 16px;
+      font-size: 14px; line-height: 20px;
+      position: relative;
+    }
+    .from-buyer .msg-bubble {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-radius: 4px 16px 16px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .from-seller .msg-bubble {
+      background: var(--bg-chotot);
+      color: var(--text-primary);
+      border-radius: 16px 4px 16px 16px;
+    }
+    /* Listing inside message bubble */
+    .msg-listing-mini {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 8px;
+      display: flex; gap: 8px;
+      margin-bottom: 8px; cursor: pointer;
+    }
+    .msg-listing-mini-img {
+      width: 44px; height: 44px; border-radius: 6px;
+      background: linear-gradient(135deg, #d0e8d0 0%, #a8c8a8 100%);
+      flex-shrink: 0; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .msg-listing-mini-info { flex: 1; min-width: 0; }
+    .msg-listing-mini-title {
+      font-size: 11px; font-weight: 600; color: var(--text-primary);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .msg-listing-mini-price {
+      font-size: 11px; font-weight: 700; color: var(--text-primary);
+    }
+    .msg-reaction {
+      position: absolute; bottom: -10px; right: 8px;
+      background: var(--bg-primary);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 0 8px rgba(34,34,34,.12);
+      padding: 2px 5px; font-size: 11px; line-height: 1.4;
+    }
+
+    /* Quick replies */
+    .quick-replies {
+      flex-shrink: 0;
+      padding: 10px 16px;
+      display: flex; gap: 8px; overflow-x: auto;
+    }
+    .quick-replies::-webkit-scrollbar { display: none; }
+    .quick-chip {
+      padding: 6px 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-pill);
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    }
+    .quick-chip:hover { background: var(--bg-secondary); }
+
+    /* Composer */
+    .chat-composer {
+      flex-shrink: 0;
+      background: var(--bg-primary);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -2px 8px rgba(89,89,89,.12);
+      padding: 12px 16px 16px;
+    }
+    .composer-input-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .composer-input {
+      flex: 1; border: none; outline: none;
+      font: 14px var(--font); color: var(--text-primary);
+      background: transparent;
+      line-height: 20px;
+    }
+    .composer-input::placeholder { color: var(--text-tertiary); }
+    .composer-send-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--bg-chotot);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .composer-send-btn:hover { opacity: .85; }
+    .composer-actions { display: flex; gap: 8px; }
+    .composer-chip {
+      display: flex; align-items: center; gap: 4px;
+      background: var(--bg-secondary);
+      border: none; border-radius: var(--radius-pill);
+      padding: 4px 12px; height: 32px;
+      font: 500 13px var(--font); color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .composer-chip:hover { background: var(--bg-tertiary); }
+
+    /* ─── PROFILE PANEL ───────────────────────────────────────── */
+    .profile-panel {
+      width: 360px; flex-shrink: 0;
+      overflow-y: auto;
+      background: var(--bg-app);
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 8px;
+    }
+    .profile-panel::-webkit-scrollbar { width: 4px; }
+    .profile-panel::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 2px; }
+    .profile-card {
+      background: var(--bg-primary);
+      border-radius: var(--radius-card);
+      padding: 12px;
+    }
+    .profile-top {
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .profile-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #e8b4a0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; color: #7a3b20;
+      flex-shrink: 0;
+    }
+    .profile-info { flex: 1; min-width: 0; }
+    .profile-name {
+      font-size: 16px; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .profile-join {
+      font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;
+    }
+    .profile-rating {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+    }
+    .profile-rating-count {
+      font-weight: 400; color: var(--text-tertiary); text-decoration: underline; cursor: pointer;
+    }
+    .profile-xemtrang-btn {
+      width: 100%; margin-top: 10px; height: 36px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-pill);
+      font: 600 14px var(--font); color: var(--text-primary);
+      cursor: pointer;
+    }
+    .profile-xemtrang-btn:hover { background: var(--bg-secondary); }
+
+    /* Customer needs */
+    .profile-section-title {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .profile-section-label {
+      font-size: 14px; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .profile-section-label svg { color: var(--bg-chotot); }
+    .profile-updated-badge {
+      font-size: 11px; font-weight: 500; color: var(--text-tertiary);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .profile-updated-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #ee3742;
+    }
+    .profile-need-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      margin-bottom: 6px; font-size: 13px; color: var(--text-primary);
+    }
+    .profile-need-icon { flex-shrink: 0; margin-top: 1px; }
+    .profile-need-label { color: var(--text-secondary); min-width: 60px; }
+    .profile-need-val { color: var(--text-primary); font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Gallery */
+    .gallery-scroll {
+      display: flex; gap: 6px; overflow-x: auto;
+      margin-top: 8px;
+    }
+    .gallery-scroll::-webkit-scrollbar { display: none; }
+    .gallery-thumb {
+      width: 76px; height: 64px; border-radius: 8px;
+      background: linear-gradient(135deg, #d0e8d0 0%, #a8c8a8 100%);
+      flex-shrink: 0; overflow: hidden;
+      position: relative; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .gallery-thumb-video::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.25);
+    }
+    .gallery-thumb-play {
+      position: absolute; z-index: 1;
+      width: 24px; height: 24px;
+      background: rgba(255,255,255,.9);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Tin đang trao đổi */
+    .trade-grid {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .trade-card {
+      width: calc(50% - 4px);
+      border-radius: var(--radius-ad);
+      overflow: hidden; cursor: pointer;
+      background: var(--bg-secondary);
+    }
+    .trade-card-img {
+      width: 100%; height: 80px;
+      background: linear-gradient(135deg, #e8d5b7 0%, #c8b090 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .trade-card-body { padding: 6px 8px; }
+    .trade-card-price {
+      font-size: 13px; font-weight: 700; color: var(--text-primary);
+    }
+    .trade-card-title {
+      font-size: 11px; color: var(--text-secondary);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .trade-card-btn {
+      margin: 4px 8px 8px;
+      width: calc(100% - 16px);
+      height: 28px; border-radius: var(--radius-pill);
+      background: var(--bg-chotot);
+      border: none; cursor: pointer;
+      font: 600 12px var(--font); color: var(--text-primary);
+    }
+    .trade-card-btn:hover { opacity: .85; }
+
+    /* Divider in profile */
+    .profile-divider {
+      height: 1px; background: var(--border-divider);
+      margin: 10px 0;
+    }
+    .see-all-link {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      text-decoration: none; cursor: pointer;
+    }
+    .see-all-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════ TOP NAV ═══════════ -->
+  <nav class="top-nav">
+    <div class="nav-logo">
+      <button class="nav-menu-btn">
+        <!-- Hamburger -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h18M3 6h18M3 18h18" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <!-- Chợ Tốt logo -->
+      <div class="nav-logo-text">
+        <span class="logo-cho">chợ</span><span class="logo-caret">TỐT</span>
+      </div>
+    </div>
+
+    <div class="nav-search-area">
+      <!-- Location -->
+      <button class="nav-location-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#ffd400"/>
+        </svg>
+        <span>Tp. Hồ Chí Minh</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M6 9l6 6 6-6" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <!-- Search bar -->
+      <div class="nav-search-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="#8c8c8c" stroke-width="2"/>
+          <path d="M16.5 16.5L21 21" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+        <button class="nav-search-submit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="#222" stroke-width="2.5"/>
+            <path d="M16.5 16.5L21 21" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Wishlist -->
+      <button class="nav-icon-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <!-- Notifications -->
+      <button class="nav-icon-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav-badge">33</span>
+      </button>
+      <!-- Liên hệ -->
+      <button class="nav-lienhe-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Liên hệ
+        <span class="nav-badge" style="position:relative;top:auto;right:auto;border:none;background:#ee3742;">82</span>
+      </button>
+      <!-- Quản lý tin -->
+      <button class="nav-quanly-btn">Quản lý tin</button>
+      <!-- Đăng bán -->
+      <button class="nav-dangban-btn">Đăng bán</button>
+      <!-- Avatar -->
+      <div class="nav-avatar-wrap">
+        <div class="nav-avatar">A</div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M6 9l6 6 6-6" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════ MAIN LAYOUT ═══════════ -->
+  <div class="main-layout">
+
+    <!-- ── LEFT ICON COLUMN ── -->
+    <div class="left-icon-col">
+      <button class="icon-nav-item active" onclick="switchTab('tinnhan', this)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="icon-label">Tin nhắn</span>
+      </button>
+      <button class="icon-nav-item" onclick="switchTab('khach', this)" style="position:relative;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="9" cy="7" r="4" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="icon-label" style="color:var(--text-tertiary);">Khách</span>
+        <span class="icon-nav-badge">2</span>
+      </button>
+    </div>
+
+    <!-- ── SIDEBAR (chat list) ── -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Nhắn tin</div>
+        <div class="sidebar-search">
+          <input class="sidebar-search-input" type="text" placeholder="Nhập 3 ký tự để tìm kiếm">
+          <button class="sidebar-more-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="5" r="1.5" fill="#595959"/>
+              <circle cx="12" cy="12" r="1.5" fill="#595959"/>
+              <circle cx="12" cy="19" r="1.5" fill="#595959"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="sidebar-tabs">
+        <button class="stab active">Tất cả</button>
+        <button class="stab" onclick="switchStab(this)">Chưa đọc</button>
+        <button class="stab" onclick="switchStab(this)">Hẹn gặp</button>
+        <button class="stab" onclick="switchStab(this)">Đang trả giá</button>
+      </div>
+
+      <!-- Notification bar -->
+      <div class="sidebar-notif" id="sidebar-notif">
+        <div class="sidebar-notif-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" fill="white"/>
+          </svg>
+        </div>
+        <div class="sidebar-notif-body">
+          <div class="sidebar-notif-title">X khách mới đang đợi bạn</div>
+          <div class="sidebar-notif-sub">Nhấn để xem thông tin và tư vấn ngay</div>
+        </div>
+        <button class="sidebar-notif-close" onclick="document.getElementById('sidebar-notif').style.display='none'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6l12 12" stroke="#595959" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Chat list -->
+      <div class="chat-list">
+
+        <!-- Item 1 — An Tran (active / selected) -->
+        <div class="chat-item active" onclick="selectChat(this)">
+          <div class="chat-avatar chat-avatar-online" style="background:#e8b4a0;color:#7a3b20;">A</div>
+          <div class="chat-item-body">
+            <div class="chat-item-row1">
+              <span class="chat-item-name">An Tran</span>
+              <span class="chat-item-time">11:30</span>
+              <span class="chat-item-badge">12</span>
+            </div>
+            <div class="chat-item-row2">
+              <span class="chat-item-tag tag-red">
+                <span class="tag-dot"></span>Khách mới
+              </span>
+            </div>
+            <div class="chat-item-msg">Tìm: Mua nhà/chung cư, từ 5-7 tỷ, Tp Hồ Chí Minh →</div>
+          </div>
+        </div>
+
+        <!-- Item 2 — Khánh Lê -->
+        <div class="chat-item" onclick="selectChat(this)">
+          <div class="chat-avatar" style="background:#b4d4e8;color:#1a4d70;">K</div>
+          <div class="chat-item-body">
+            <div class="chat-item-row1">
+              <span class="chat-item-name">Khánh Lê</span>
+              <span class="chat-item-time">11:30</span>
+              <span class="chat-item-badge">12</span>
+            </div>
+            <div class="chat-item-msg">Còn xài tốt không bạn ơi</div>
+            <div class="chat-item-intent">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="#8c8c8c" stroke-width="2"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Tìm: Mua nhà/chung cư, từ 7-10 tỷ, Tp Hồ... →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3 — Uyên Nguyễn -->
+        <div class="chat-item" onclick="selectChat(this)">
+          <div class="chat-avatar" style="background:#e8c8b4;color:#704020;">U</div>
+          <div class="chat-item-body">
+            <div class="chat-item-row1">
+              <span class="chat-item-name">Uyên Nguyễn</span>
+              <span class="chat-item-time">11:30</span>
+              <span class="chat-item-badge">12</span>
+            </div>
+            <div class="chat-item-row2">
+              <span class="chat-item-tag tag-green">
+                <span class="tag-dot"></span>Đã chốt
+              </span>
+            </div>
+            <div class="chat-item-msg">Bạn gửi mình địa chỉ để qua lấy...</div>
+            <div class="chat-item-intent">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="#8c8c8c" stroke-width="2"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Tìm: Mua nhà/chung cư, từ 7-10 tỷ, Tp Hồ... →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4 — Chợ Tốt Official -->
+        <div class="chat-item" onclick="selectChat(this)">
+          <div class="chat-avatar official-avatar">T</div>
+          <div class="chat-item-body">
+            <div class="chat-item-row1">
+              <span class="chat-item-name" style="display:flex;align-items:center;gap:4px;">
+                Chợ Tốt Official Account
+                <span class="chat-item-verified">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="white">
+                    <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </span>
+              <span class="chat-item-time">11:30</span>
+            </div>
+            <div class="chat-item-msg">Đây là nội dung tin nhắn gửi từ...</div>
+          </div>
+        </div>
+
+        <!-- Item 5 — Pham Thi Cam Nhung -->
+        <div class="chat-item" onclick="selectChat(this)">
+          <div class="chat-avatar" style="background:#d4b4e8;color:#5a1a80;">P</div>
+          <div class="chat-item-body">
+            <div class="chat-item-row1">
+              <span class="chat-item-name">Pham Thi Cam Nhung</span>
+              <span class="chat-item-time">11:30</span>
+              <span class="chat-item-badge">12</span>
+            </div>
+            <div class="chat-item-row2">
+              <span class="chat-item-tag tag-blue">
+                <span class="tag-dot"></span>Đang trả giá
+              </span>
+            </div>
+            <div class="chat-item-msg">Cho mình xin giá phòng trợ full...</div>
+          </div>
+        </div>
+
+        <!-- Item 6 — Nguyễn Văn B -->
+        <div class="chat-item" onclick="selectChat(this)">
+          <div class="chat-avatar" style="background:#b4e8d4;color:#1a6040;">N</div>
+          <div class="chat-item-body">
+            <div class="chat-item-row1">
+              <span class="chat-item-name">Nguyễn Văn Bình</span>
+              <span class="chat-item-time">10:45</span>
+            </div>
+            <div class="chat-item-msg">Căn đó còn không bạn ơi?</div>
+          </div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="chat-item" onclick="selectChat(this)">
+          <div class="chat-avatar" style="background:#e8e4b4;color:#60501a;">T</div>
+          <div class="chat-item-body">
+            <div class="chat-item-row1">
+              <span class="chat-item-name">Trần Minh Khoa</span>
+              <span class="chat-item-time">09:20</span>
+            </div>
+            <div class="chat-item-msg">Ok mình qua xem chiều nay nhé</div>
+          </div>
+        </div>
+
+      </div><!-- /chat-list -->
+    </div><!-- /sidebar -->
+
+    <!-- ── CHAT PANEL ── -->
+    <div class="chat-panel">
+
+      <!-- Chat header -->
+      <div class="chat-header">
+        <div class="chat-header-avatar">A</div>
+        <div class="chat-header-info">
+          <div class="chat-header-name">
+            An Tran
+            <span class="chat-header-tag tag-red">
+              <span class="tag-dot"></span>Khách mới
+            </span>
+          </div>
+          <div class="chat-header-status">Đang hoạt động</div>
+        </div>
+        <div class="chat-header-actions">
+          <!-- More options -->
+          <button class="chat-icon-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="5" r="1.5" fill="#595959"/>
+              <circle cx="12" cy="12" r="1.5" fill="#595959"/>
+              <circle cx="12" cy="19" r="1.5" fill="#595959"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pinned listing card -->
+      <div class="chat-listing-card">
+        <div class="chat-listing-img">🏠</div>
+        <div class="chat-listing-info">
+          <div class="chat-listing-title">CHO THUÊ CĂN HỘ MINI FULL NỘI THẤT SIÊU RỘNG THOÁNG MÁT</div>
+          <div class="chat-listing-price">5,5 triệu/tháng</div>
+          <div class="chat-listing-badges">
+            <span class="listing-badge listing-badge-sold">Đã bán</span>
+            <span class="listing-badge" style="background:var(--bg-tertiary);color:var(--text-secondary);">Ẩn tin</span>
+          </div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18l6-6-6-6" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Messages -->
+      <div class="chat-messages">
+
+        <!-- Date separator -->
+        <div style="text-align:center;font-size:12px;color:var(--text-tertiary);margin:4px 0;">Hôm nay</div>
+
+        <!-- Buyer message with listing mini card -->
+        <div class="msg-row from-buyer">
+          <div class="msg-avatar-sm">A</div>
+          <div class="msg-bubble">
+            <div class="msg-listing-mini">
+              <div class="msg-listing-mini-img">🏠</div>
+              <div class="msg-listing-mini-info">
+                <div class="msg-listing-mini-title">CHO THUÊ CĂN HỘ MINI FULL...</div>
+                <div class="msg-listing-mini-price">5,5 triệu/tháng</div>
+              </div>
+            </div>
+            Nhà này thuê giá có cố định không ạ?
+            <span class="msg-reaction">❤️</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick replies -->
+      <div class="quick-replies">
+        <div class="quick-chip">Căn này vẫn còn ạ</div>
+        <div class="quick-chip">Bên mình cọc tháng đầu ạ</div>
+        <div class="quick-chip">Dạ có thể vào ở luôn ạ</div>
+        <div class="quick-chip">Giá mình có thể thương lượng thêm ạ</div>
+      </div>
+
+      <!-- Composer -->
+      <div class="chat-composer">
+        <div class="composer-input-row">
+          <input class="composer-input" type="text" placeholder="Nhập tin nhắn...">
+          <button class="composer-send-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M22 2L11 13" stroke="#222" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 2L15 22 11 13 2 9l20-7z" stroke="#222" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="composer-actions">
+          <button class="composer-chip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="3" stroke="#595959" stroke-width="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="#595959"/>
+              <path d="M21 15l-5-5L5 21" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Hình/Video
+          </button>
+          <button class="composer-chip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#595959" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="10" r="3" stroke="#595959" stroke-width="2"/>
+            </svg>
+            Địa chỉ
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /chat-panel -->
+
+    <!-- ── PROFILE PANEL ── -->
+    <div class="profile-panel">
+
+      <!-- Profile card -->
+      <div class="profile-card">
+        <div class="profile-top">
+          <div class="profile-avatar">A</div>
+          <div class="profile-info">
+            <div class="profile-name">An Tran</div>
+            <div class="profile-join">Đã tham gia: 2 năm trước</div>
+            <div class="profile-rating">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffd400">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              4.7
+              <span class="profile-rating-count">(12 đánh giá)</span>
+            </div>
+          </div>
+        </div>
+        <button class="profile-xemtrang-btn">Xem trang</button>
+      </div>
+
+      <!-- Customer needs -->
+      <div class="profile-card">
+        <div class="profile-section-title">
+          <div class="profile-section-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" fill="#ffd400"/>
+            </svg>
+            Nhu cầu khách hàng
+          </div>
+          <div class="profile-updated-badge">
+            <span class="profile-updated-dot"></span>
+            Mới cập nhật
+          </div>
+        </div>
+        <div class="profile-need-row">
+          <div class="profile-need-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="#595959" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="#595959" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="#595959" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="#595959" stroke-width="1.8"/></svg>
+          </div>
+          <span class="profile-need-label">Tìm:</span>
+          <span class="profile-need-val">Mua nhà ở, chung cư</span>
+        </div>
+        <div class="profile-need-row">
+          <div class="profile-need-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#595959" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="#595959" stroke-width="1.8"/></svg>
+          </div>
+          <span class="profile-need-label">Khu vực:</span>
+          <span class="profile-need-val">Gò Vấp, Bình Thạnh, Huyện Bình...</span>
+        </div>
+        <div class="profile-need-row">
+          <div class="profile-need-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#595959" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="#595959" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <span class="profile-need-label">Giá:</span>
+          <span class="profile-need-val">5 - 10 tỷ</span>
+        </div>
+      </div>
+
+      <!-- Photos & videos -->
+      <div class="profile-card">
+        <div class="profile-section-title">
+          <div class="profile-section-label">Ảnh và video</div>
+          <a class="see-all-link">Xem tất cả &rsaquo;</a>
+        </div>
+        <div class="gallery-scroll">
+          <div class="gallery-thumb">🏠</div>
+          <div class="gallery-thumb gallery-thumb-video">
+            🏠
+            <div class="gallery-thumb-play">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="#222"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+          </div>
+          <div class="gallery-thumb" style="background:linear-gradient(135deg,#d0d8e8 0%,#a0b0c8 100%);">🛋️</div>
+          <div class="gallery-thumb" style="background:linear-gradient(135deg,#e8d8d0 0%,#c8b0a0 100%);">🚿</div>
+          <div class="gallery-thumb" style="background:linear-gradient(135deg,#d8e8d0 0%,#b0c8a0 100%);">🌿</div>
+        </div>
+      </div>
+
+      <!-- Active listings -->
+      <div class="profile-card">
+        <div class="profile-section-title">
+          <div class="profile-section-label">Tin đang trao đổi</div>
+          <a class="see-all-link">Xem tất cả &rsaquo;</a>
+        </div>
+        <div class="trade-grid">
+          <!-- Card 1 -->
+          <div class="trade-card">
+            <div class="trade-card-img">🏍️</div>
+            <div class="trade-card-body">
+              <div class="trade-card-price">16.700.000đ</div>
+              <div class="trade-card-title">Honda Lead 125 Fi Biển số TP Cò bảo hành</div>
+            </div>
+            <button class="trade-card-btn">Nhắn</button>
+          </div>
+          <!-- Card 2 -->
+          <div class="trade-card" style="">
+            <div class="trade-card-img" style="background:linear-gradient(135deg,#d0d0e8 0%,#a0a0c8 100%);">📱</div>
+            <div class="trade-card-body">
+              <div class="trade-card-price">16.700.000đ</div>
+              <div class="trade-card-title">Xiaomi 13 Ultra 16/512 GB rom nguyên bản</div>
+            </div>
+            <button class="trade-card-btn">Nhắn</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /profile-panel -->
+
+  </div><!-- /main-layout -->
+
+  <script>
+    // Tab switch (Tin nhắn / Khách)
+    function switchTab(tab, el) {
+      document.querySelectorAll('.icon-nav-item').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      // Update icon colors for inactive
+      document.querySelectorAll('.icon-nav-item:not(.active) svg path, .icon-nav-item:not(.active) svg circle')
+        .forEach(p => { if (!p.closest('.icon-nav-badge')) p.setAttribute('stroke', '#595959'); });
+    }
+
+    // Sidebar tab switch
+    function switchStab(el) {
+      document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Select chat item
+    function selectChat(el) {
+      document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Composer enter to "send"
+    document.querySelector('.composer-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        const val = this.value.trim();
+        if (!val) return;
+        const msgs = document.querySelector('.chat-messages');
+        const row = document.createElement('div');
+        row.className = 'msg-row from-seller';
+        row.innerHTML = `<div class="msg-bubble">${val}</div>`;
+        msgs.appendChild(row);
+        msgs.scrollTop = msgs.scrollHeight;
+        this.value = '';
+      }
+    });
+
+    // Send button
+    document.querySelector('.composer-send-btn').addEventListener('click', function() {
+      const input = document.querySelector('.composer-input');
+      const val = input.value.trim();
+      if (!val) return;
+      const msgs = document.querySelector('.chat-messages');
+      const row = document.createElement('div');
+      row.className = 'msg-row from-seller';
+      row.innerHTML = `<div class="msg-bubble">${val}</div>`;
+      msgs.appendChild(row);
+      msgs.scrollTop = msgs.scrollHeight;
+      input.value = '';
+    });
+
+    // Quick chip click
+    document.querySelectorAll('.quick-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        const msgs = document.querySelector('.chat-messages');
+        const row = document.createElement('div');
+        row.className = 'msg-row from-seller';
+        row.innerHTML = `<div class="msg-bubble">${this.textContent}</div>`;
+        msgs.appendChild(row);
+        msgs.scrollTop = msgs.scrollHeight;
+      });
+    });
+  </script>
+</body>
+</html>
